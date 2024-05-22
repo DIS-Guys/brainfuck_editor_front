@@ -1,27 +1,29 @@
-function App() {
+export function App() {
   return (
     <div className="container">
-      <header>
-        <h1>Brainfuck Editor</h1>
-      </header>
-      <main>
+      <h1 className="title">Brainfuck Editor</h1>
+      <div className="tools">
         <div className="editor">
-          <textarea
-            id="code"
-            placeholder="Enter your Brainfuck code here..."
-          ></textarea>
+          <div className="code-input">
+            <textarea
+              id="code-input"
+              placeholder="Write your code here..."
+            ></textarea>
+            <button id="run-button"></button>
+          </div>
+          <div className="editor-blocks">
+            <div className="input-container">
+              <textarea id="input" placeholder="Input value"></textarea>
+            </div>
+            <div className="output-container">
+              <div id="output">Result will be here...</div>
+            </div>
+          </div>
         </div>
-        <div className="controls">
-          <button id="run">Run</button>
-          <button id="stop">Stop</button>
+        <div className="debugger">
+          <div id="debugger-container">Місце для дебагера...</div>
         </div>
-        <div className="output">
-          <h2>Output</h2>
-          <pre id="output"></pre>
-        </div>
-      </main>
+      </div>
     </div>
   );
 }
-
-export default App;
