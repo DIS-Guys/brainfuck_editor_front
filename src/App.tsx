@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 export function App() {
+  const [code, setCode] = useState('');
+  const [input, setInput] = useState('');
   const [lineNumber, setLineNumber] = useState(1);
   const mainRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
@@ -15,6 +17,7 @@ export function App() {
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const numberOfLines = event.target.value.split('\n').length;
+    setCode(event.target.value);
     setLineNumber(numberOfLines);
   };
 
@@ -22,6 +25,12 @@ export function App() {
     if (lineNumbersRef.current && mainRef.current) {
       lineNumbersRef.current.scrollTop = mainRef.current.scrollTop;
     }
+  };
+
+  const clearEditor = () => {
+    setCode('');
+    setLineNumber(1);
+    mainRef.current?.focus();
   };
 
   return (
@@ -44,13 +53,24 @@ export function App() {
               ref={mainRef}
               onChange={handleCodeInputChange}
               onScroll={handleScroll}
+              value={code}
             ></textarea>
             <button className="button" id="run-button"></button>
-            <button className="button" id="clear-button"></button>
+            <button
+              className="button"
+              id="clear-button"
+              onClick={clearEditor}
+            ></button>
           </div>
           <div className="editor-blocks">
             <div className="input-container">
-              <textarea className="input" id="input" placeholder="Input value"></textarea>
+              <textarea
+                className="input"
+                id="input"
+                placeholder="Input a value..."
+                onChange={(event) => setInput(event.target.value)}
+                value={input}
+              ></textarea>
             </div>
             <div className="output-container">
               <div id="output">Result will be here...</div>
