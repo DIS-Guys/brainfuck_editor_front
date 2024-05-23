@@ -38,6 +38,7 @@ export function App() {
               ))}
             </div>
             <textarea
+              className="input"
               id="code-input"
               placeholder="Write your code here..."
               ref={mainRef}
@@ -49,7 +50,7 @@ export function App() {
           </div>
           <div className="editor-blocks">
             <div className="input-container">
-              <textarea id="input" placeholder="Input value"></textarea>
+              <textarea className="input" id="input" placeholder="Input value"></textarea>
             </div>
             <div className="output-container">
               <div id="output">Result will be here...</div>
