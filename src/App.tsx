@@ -19,6 +19,8 @@ export function App() {
 
   useEffect(() => {
     const highlightedCode = code
+      .split('\n')
+      .join('')
       .split('')
       .map((char, index) => {
         if (index === currentPosition) {
