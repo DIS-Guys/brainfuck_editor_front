@@ -1,30 +1,3 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #3e3e3e;
-  color: #d4d4d4;
-}
-
-.title {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 60px;
-  color: #d9534f;
-  text-align: center;
-  text-shadow: 3px 3px #000;
-}
-
-.container {
-  height: 100vh;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.tools {
-  display: flex;
-  height: 70%;
-  gap: 20px;
-}
-
 .editor {
   display: flex;
   flex-direction: column;
@@ -106,52 +79,6 @@ body {
   overflow-y: auto;
 }
 
-.debugger {
-  width: 50%;
-  background-color: #252526;
-  padding: 10px;
-}
-
-#debugger-container {
-  width: 100%;
-  height: 100%;
-}
-
-.memory-size {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-#memory-size-input {
-  height: 20px;
-  border: none;
-  outline: none;
-}
-
-#memory-size-input::-webkit-outer-spin-button,
-#memory-size-input::-webkit-inner-spin-button {
-  margin: 0;
-  -webkit-appearance: none;
-}
-
-.control-buttons {
-  display: flex;
-  height: 50px;
-  gap: 20px;
-}
-
-.control-button {
-  width: 80px;
-}
-
-.code-container {
-  font-size: 24px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
 .button {
   position: absolute;
   height: 32px;
@@ -168,15 +95,15 @@ body {
 #run-button {
   top: 10px;
   right: 20px;
-  background-image: url('./images/play.png');
+  background-image: url('../../images/play.png');
 }
 
 #clear-button {
   top: 55px;
   right: 20px;
-  background-image: url('./images/clean-up.png');
+  background-image: url('../../images/clean-up.png');
 }
 
 #run-button:hover {
-  background-image: url('./images/play-hover.png');
+  background-image: url('../../images/play-hover.png');
 }
