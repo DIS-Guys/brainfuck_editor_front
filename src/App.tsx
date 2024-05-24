@@ -50,6 +50,12 @@ export function App() {
     mainRef.current?.focus();
   };
 
+  const handleMemorySizeBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (+event.target.value > 30000) {
+      setMemorySize(30000);
+    }
+  };
+
   const stepThroughCode = () => {
     setCurrentPosition((prevPosition) => {
       if (prevPosition < code.length - 1) {
@@ -109,14 +115,8 @@ export function App() {
             <input
               type="number"
               id="memory-size-input"
-              onChange={(event) => {
-                setMemorySize(+event.target.value);
-              }}
-              onBlur={(event) => {
-                if (+event.target.value > 30000) {
-                  setMemorySize(30000);
-                }
-              }}
+              onChange={(event) => setMemorySize(+event.target.value)}
+              onBlur={handleMemorySizeBlur}
               value={memorySize}
             />
           </div>
