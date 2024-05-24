@@ -1,0 +1,45 @@
+.debugger {
+  width: 50%;
+  background-color: #252526;
+  padding: 10px;
+}
+
+#debugger-container {
+  width: 100%;
+  height: 100%;
+}
+
+.memory-size {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#memory-size-input {
+  height: 20px;
+  border: none;
+  outline: none;
+}
+
+#memory-size-input::-webkit-outer-spin-button,
+#memory-size-input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.control-buttons {
+  display: flex;
+  height: 50px;
+  gap: 20px;
+}
+
+.control-button {
+  width: 80px;
+}
+
+.code-container {
+  font-size: 24px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+}
