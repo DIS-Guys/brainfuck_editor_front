@@ -51,7 +51,7 @@ export const Editor: React.FC<Props> = ({ code, setCode }) => {
   const handleRun = () => {
     const body = {
       code,
-      userInput: input,
+      input,
     };
 
     fetch('http://localhost:8080/brainfuck/interpret', {
