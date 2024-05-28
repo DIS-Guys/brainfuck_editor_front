@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './Editor.css';
+import { Output } from '../../types/Output';
 
 type Props = {
   code: string;
@@ -9,6 +10,7 @@ type Props = {
 export const Editor: React.FC<Props> = ({ code, setCode }) => {
   const [input, setInput] = useState('');
   const [lineNumber, setLineNumber] = useState(1);
+  const [interpretedCode, setInterpretedCode] = useState('');
   const mainRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
 
@@ -26,6 +28,14 @@ export const Editor: React.FC<Props> = ({ code, setCode }) => {
     setLineNumber(numberOfLines);
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (event.target.value.length > 329) {
+      return;
+    } else {
+      setInput(event.target.value);
+    }
+  }
+
   const handleScroll = () => {
     if (lineNumbersRef.current && mainRef.current) {
       lineNumbersRef.current.scrollTop = mainRef.current.scrollTop;
@@ -36,6 +46,23 @@ export const Editor: React.FC<Props> = ({ code, setCode }) => {
     setCode('');
     setLineNumber(1);
     mainRef.current?.focus();
+  };
+
+  const handleRun = () => {
+    const body = {
+      code,
+      userInput: input,
+    };
+
+    fetch('http://localhost:8080/brainfuck/interpret', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((data: Output) => setInterpretedCode(data.output));
   };
 
   return (
@@ -57,7 +84,7 @@ export const Editor: React.FC<Props> = ({ code, setCode }) => {
           onScroll={handleScroll}
           value={code}
         ></textarea>
-        <button className="button" id="run-button"></button>
+        <button className="button" id="run-button" onClick={handleRun}></button>
         <button
           className="button"
           id="clear-button"
@@ -70,12 +97,17 @@ export const Editor: React.FC<Props> = ({ code, setCode }) => {
             className="input"
             id="input"
             placeholder="Input a value..."
-            onChange={(event) => setInput(event.target.value)}
+            onChange={handleInputChange}
             value={input}
           ></textarea>
+          <button className="button" id="clear-input-button" onClick={() => setInput('')}></button>
         </div>
         <div className="output-container">
-          <div id="output">Result will be here...</div>
+          {interpretedCode ? (
+            <div id="output">{interpretedCode}</div>
+          ) : (
+            <div id="output">Result will be here...</div>
+          )}
         </div>
       </div>
     </div>

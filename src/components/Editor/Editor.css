@@ -59,6 +59,7 @@
 }
 
 .input-container {
+  position: relative;
   box-sizing: border-box;
   width: 100%;
   border-bottom: 1px solid #333;
@@ -67,8 +68,10 @@
 
 #input {
   padding: 10px;
+  overflow: hidden;
   font-size: 14px;
   background-color: #252526;
+  padding-right: 45px;
 }
 
 .output-container {
@@ -101,6 +104,12 @@
 #clear-button {
   top: 55px;
   right: 20px;
+  background-image: url('../../images/clean-up.png');
+}
+
+#clear-input-button {
+  top: 10px;
+  right: 10px;
   background-image: url('../../images/clean-up.png');
 }
 
