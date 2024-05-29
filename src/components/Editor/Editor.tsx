@@ -5,10 +5,11 @@ import { Output } from '../../types/Output';
 type Props = {
   code: string;
   setCode: (code: string) => void;
+  input: string;
+  setInput: (code: string) => void;
 };
 
-export const Editor: React.FC<Props> = ({ code, setCode }) => {
-  const [input, setInput] = useState('');
+export const Editor: React.FC<Props> = ({ code, setCode, input, setInput }) => {
   const [lineNumber, setLineNumber] = useState(1);
   const [interpretedCode, setInterpretedCode] = useState('');
   const mainRef = useRef<HTMLTextAreaElement>(null);
@@ -34,7 +35,7 @@ export const Editor: React.FC<Props> = ({ code, setCode }) => {
     } else {
       setInput(event.target.value);
     }
-  }
+  };
 
   const handleScroll = () => {
     if (lineNumbersRef.current && mainRef.current) {
@@ -100,7 +101,11 @@ export const Editor: React.FC<Props> = ({ code, setCode }) => {
             onChange={handleInputChange}
             value={input}
           ></textarea>
-          <button className="button" id="clear-input-button" onClick={() => setInput('')}></button>
+          <button
+            className="button"
+            id="clear-input-button"
+            onClick={() => setInput('')}
+          ></button>
         </div>
         <div className="output-container">
           {interpretedCode ? (

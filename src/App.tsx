@@ -5,13 +5,14 @@ import './App.css';
 
 export function App() {
   const [code, setCode] = useState('');
+  const [input, setInput] = useState('');
 
   return (
     <div className="container">
       <h1 className="title">Brainfuck Editor</h1>
       <div className="tools">
-        <Editor code={code} setCode={setCode} />
-        <Debugger code={code} />
+        <Editor code={code} setCode={setCode} input={input} setInput={setInput} />
+        <Debugger code={code} input={input} />
       </div>
     </div>
   );
