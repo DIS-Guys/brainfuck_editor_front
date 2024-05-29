@@ -1,30 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './Debugger.css';
 
 type Props = {
   code: string;
-}
+  input: string;
+};
 
-export const Debugger: React.FC<Props> = ({ code }) => {
+export const Debugger: React.FC<Props> = ({ code, input }) => {
   const [memorySize, setMemorySize] = useState(30000);
   const [debuggerCode, setDebuggerCode] = useState('');
   const [isDebugging, setIsDebugging] = useState(false);
-  const [currentPosition, setCurrentPosition] = useState(0);
+  const [debugInfo, setDebugInfo] = useState<Array<Array<number>>>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const highlightedCode = code
+  const highlightCode = (code: string, position: number) => {
+    return code
       .split('\n')
       .join('')
       .split('')
       .map((char, index) => {
-        if (index === currentPosition) {
+        if (index === position) {
           return `<span style="background-color: yellow;">${char}</span>`;
         }
         return char;
       })
       .join('');
-    setDebuggerCode(highlightedCode);
-  }, [code, currentPosition]);
+  };
 
   const handleMemorySizeBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (+event.target.value > 30000) {
@@ -33,12 +34,38 @@ export const Debugger: React.FC<Props> = ({ code }) => {
   };
 
   const stepThroughCode = () => {
-    setCurrentPosition((prevPosition) => {
-      if (prevPosition < code.length - 1) {
-        return prevPosition + 1;
-      }
-      return prevPosition;
-    });
+    if (!isDebugging || currentIndex >= debugInfo.length - 1) {
+      return;
+    }
+    const newIndex = currentIndex + 1;
+    setDebuggerCode(highlightCode(code, debugInfo[newIndex][0]));
+    setCurrentIndex(newIndex);
+  };
+
+  const handleStartDebugging = () => {
+    const body = {
+      code,
+      input,
+    };
+
+    setCurrentIndex(0);
+    setIsDebugging(true);
+    fetch('http://localhost:8080/brainfuck/debug', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then(data => {
+        if (data.output.length === 1) {
+          setIsDebugging(false);
+        } else {
+          setDebugInfo(data.output);
+          setDebuggerCode(highlightCode(code, 0));
+        }
+      });
   };
 
   return (
@@ -57,10 +84,7 @@ export const Debugger: React.FC<Props> = ({ code }) => {
         <button
           className="control-button"
           id="start"
-          onClick={() => {
-            setIsDebugging(true);
-            setCurrentPosition(0);
-          }}
+          onClick={handleStartDebugging}
         >
           Start
         </button>
@@ -69,7 +93,6 @@ export const Debugger: React.FC<Props> = ({ code }) => {
           id="stop"
           onClick={() => {
             setIsDebugging(false);
-            setCurrentPosition(0);
           }}
         >
           Stop
