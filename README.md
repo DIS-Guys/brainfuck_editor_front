@@ -20,7 +20,7 @@ The project consists in creating an interpreter for the Brainfuck programming la
 #### Front-end (React + TypeScript)
 
 1. [Download node.js (version 20 or higher)](https://nodejs.org/en/download/prebuilt-installer)
-2. Run ```npm install``` in projects root directory
+2. Run ```npm install``` in project`s root directory
 3. Run ```npm run dev``` to launch front-end part
 4. Visit http://localhost:5173/ to see best desing you can imagine
 
@@ -29,6 +29,10 @@ The project consists in creating an interpreter for the Brainfuck programming la
 1. [Download JDK 17+](https://www.oracle.com/cis/java/technologies/downloads/)
 2. [Download Gradle](https://gradle.org/install/)
 3. Run ```./gradlew bootRun``` to start server
+
+How to run test?
+
+- Run ```./gradlew test``` to start tests
 
 ## Short Brainfuck tutorial
 
