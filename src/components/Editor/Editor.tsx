@@ -60,6 +60,11 @@ export const Editor: React.FC<Props> = ({
   };
 
   const handleRun = () => {
+    mainRef.current?.focus();
+    if (!code.trim()) {
+      return;
+    }
+
     const body: RequestBody = {
       code,
       input,
@@ -89,11 +94,17 @@ export const Editor: React.FC<Props> = ({
           onScroll={handleScroll}
           value={code}
         ></textarea>
-        <button className="button" id="run-button" onClick={handleRun}></button>
+        <button
+          className="button"
+          id="run-button"
+          onClick={handleRun}
+          title="Run"
+        ></button>
         <button
           className="button"
           id="clear-button"
           onClick={clearEditor}
+          title="Clear"
         ></button>
       </div>
       <div className="editor-blocks">
@@ -108,6 +119,7 @@ export const Editor: React.FC<Props> = ({
           <button
             className="button"
             id="clear-input-button"
+            title="Clear"
             onClick={() => setInput('')}
           ></button>
         </div>
@@ -117,6 +129,12 @@ export const Editor: React.FC<Props> = ({
           ) : (
             <div id="output">Result will be here...</div>
           )}
+          <button
+            className="button"
+            id="clear-output-button"
+            title="Clear"
+            onClick={() => setInterpretedCode('')}
+          ></button>
         </div>
       </div>
     </div>

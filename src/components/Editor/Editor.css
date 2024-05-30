@@ -3,6 +3,12 @@
   flex-direction: column;
   box-sizing: border-box;
   width: 50%;
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  color: #dcdcdc;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .code-input {
@@ -10,6 +16,10 @@
   position: relative;
   width: 100%;
   height: 80%;
+  background-color: #2e2e2e;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #5c5c5c;
 }
 
 .line-numbers {
@@ -23,6 +33,7 @@
   border-right: 1px solid #4d4d4d;
   box-sizing: border-box;
   overflow: hidden;
+  color: #dcdcdc;
 }
 
 .number {
@@ -40,7 +51,10 @@
   outline: none;
   resize: none;
   box-sizing: border-box;
-  color: #d4d4d4;
+  color: #dcdcdc;
+  background-color: #1e1e1e;
+  padding: 10px;
+  line-height: 1.4em;
 }
 
 #code-input {
@@ -64,6 +78,7 @@
   width: 100%;
   border-bottom: 1px solid #333;
   border-right: 1px solid #333;
+  background-color: #252526;
 }
 
 #input {
@@ -72,14 +87,19 @@
   font-size: 14px;
   background-color: #252526;
   padding-right: 45px;
+  color: #dcdcdc;
+  border: none;
 }
 
 .output-container {
+  position: relative;
+  box-sizing: border-box;
   width: 100%;
   background-color: #252526;
   padding: 10px;
   border-bottom: 1px solid #333;
   overflow-y: auto;
+  color: #dcdcdc;
 }
 
 .button {
@@ -108,6 +128,12 @@
 }
 
 #clear-input-button {
+  top: 10px;
+  right: 10px;
+  background-image: url('../../images/clean-up.png');
+}
+
+#clear-output-button {
   top: 10px;
   right: 10px;
   background-image: url('../../images/clean-up.png');
