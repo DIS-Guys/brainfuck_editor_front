@@ -43,3 +43,33 @@
   word-wrap: break-word;
   word-break: break-all;
 }
+
+.memory-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.memory-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.memory-cell {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #b93d3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2px;
+}
+
+.memory-index {
+  margin-top: 5px;
+}
+
+.memory-cell.highlight {
+  background-color: rgba(255, 0, 0, 0.425);
+}

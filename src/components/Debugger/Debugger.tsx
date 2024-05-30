@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import './Debugger.css';
+import { DebugInfo } from '../../types/DebugInfo';
+import classNames from 'classnames';
 
 type Props = {
   code: string;
@@ -10,8 +12,10 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
   const [memorySize, setMemorySize] = useState(30000);
   const [debuggerCode, setDebuggerCode] = useState('');
   const [isDebugging, setIsDebugging] = useState(false);
-  const [debugInfo, setDebugInfo] = useState<Array<Array<number>>>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [debugInfo, setDebugInfo] = useState<number[][]>([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [memory, setMemory] = useState<number[]>(Array(30000).fill(0));
+  const [memoryViewStart, setMemoryViewStart] = useState(0);
 
   const highlightCode = (code: string, position: number) => {
     return code
@@ -20,7 +24,7 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
       .split('')
       .map((char, index) => {
         if (index === position) {
-          return `<span style="background-color: yellow;">${char}</span>`;
+          return `<span style="background-color: rgba(255, 255, 0, 0.5);">${char}</span>`;
         }
         return char;
       })
@@ -38,8 +42,19 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
       return;
     }
     const newIndex = currentIndex + 1;
-    setDebuggerCode(highlightCode(code, debugInfo[newIndex][0]));
+    const newDebugInfo = debugInfo[newIndex];
+    setDebuggerCode(highlightCode(code, newDebugInfo[0]));
     setCurrentIndex(newIndex);
+    setMemory((prevMemory) => {
+      const newMemory = [...prevMemory];
+      newMemory[newDebugInfo[1]] = newDebugInfo[2];
+      return newMemory;
+    });
+    if (newDebugInfo[1] >= memoryViewStart + 10) {
+      setMemoryViewStart(newDebugInfo[1] - 9);
+    } else if (newDebugInfo[1] < memoryViewStart) {
+      setMemoryViewStart(newDebugInfo[1]);
+    }
   };
 
   const handleStartDebugging = () => {
@@ -48,8 +63,10 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
       input,
     };
 
-    setCurrentIndex(0);
     setIsDebugging(true);
+    setCurrentIndex(0);
+    setMemory(Array(30000).fill(0));
+    setMemoryViewStart(0);
     fetch('http://localhost:8080/brainfuck/debug', {
       method: 'POST',
       headers: {
@@ -58,14 +75,21 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
       body: JSON.stringify(body),
     })
       .then((response) => response.json())
-      .then(data => {
-        if (data.output.length === 1) {
+      .then((data: DebugInfo) => {
+        if (data.debugInfo.length === 1) {
           setIsDebugging(false);
         } else {
-          setDebugInfo(data.output);
+          setDebugInfo(data.debugInfo);
           setDebuggerCode(highlightCode(code, 0));
         }
       });
+  };
+
+  const handleStopDebugging = () => {
+    setCurrentIndex(-1);
+    setMemory(Array(30000).fill(0));
+    setMemoryViewStart(0);
+    setIsDebugging(false);
   };
 
   return (
@@ -91,9 +115,7 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
         <button
           className="control-button"
           id="stop"
-          onClick={() => {
-            setIsDebugging(false);
-          }}
+          onClick={handleStopDebugging}
         >
           Stop
         </button>
@@ -110,6 +132,23 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
           dangerouslySetInnerHTML={{ __html: debuggerCode }}
         ></div>
       )}
+      <div className="memory-container">
+        {memory
+          .slice(memoryViewStart, memoryViewStart + 10)
+          .map((cell, index) => (
+            <div key={index} className="memory-wrapper">
+              <div
+                className={classNames('memory-cell', {
+                  highlighted:
+                    memoryViewStart + index === debugInfo[currentIndex]?.[1],
+                })}
+              >
+                {cell}
+              </div>
+              <div className="memory-index">{memoryViewStart + index}</div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
