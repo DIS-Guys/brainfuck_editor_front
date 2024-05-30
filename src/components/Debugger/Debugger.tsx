@@ -2,14 +2,50 @@ import { useState } from 'react';
 import './Debugger.css';
 import { DebugInfo } from '../../types/DebugInfo';
 import classNames from 'classnames';
+import { Ascii } from '../../types/Ascii';
 
 type Props = {
   code: string;
   input: string;
 };
 
+const asciiNames: Ascii = {
+  0: 'NUL',
+  1: 'SOH',
+  2: 'STX',
+  3: 'ETX',
+  4: 'EOT',
+  5: 'ENQ',
+  6: 'ACK',
+  7: 'BEL',
+  8: 'BS',
+  9: 'TAB',
+  10: 'LF',
+  11: 'VT',
+  12: 'FF',
+  13: 'CR',
+  14: 'SO',
+  15: 'SI',
+  16: 'DLE',
+  17: 'DC1',
+  18: 'DC2',
+  19: 'DC3',
+  20: 'DC4',
+  21: 'NAK',
+  22: 'SYN',
+  23: 'ETB',
+  24: 'CAN',
+  25: 'EM',
+  26: 'SUB',
+  27: 'ESC',
+  28: 'FS',
+  29: 'GS',
+  30: 'RS',
+  31: 'US',
+  127: 'DEL',
+};
+
 export const Debugger: React.FC<Props> = ({ code, input }) => {
-  const [memorySize, setMemorySize] = useState(30000);
   const [debuggerCode, setDebuggerCode] = useState('');
   const [isDebugging, setIsDebugging] = useState(false);
   const [debugInfo, setDebugInfo] = useState<number[][]>([]);
@@ -29,12 +65,6 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
         return char;
       })
       .join('');
-  };
-
-  const handleMemorySizeBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (+event.target.value > 30000) {
-      setMemorySize(30000);
-    }
   };
 
   const stepThroughCode = () => {
@@ -92,17 +122,21 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
     setIsDebugging(false);
   };
 
+  const getAsciiSymbol = (value: number) => {
+    if (value >= 32 && value <= 126) {
+      return String.fromCharCode(value);
+    } else if (value in asciiNames) {
+      return asciiNames[value];
+    } else {
+      return '';
+    }
+  };
+
   return (
     <div className="debugger">
+      <h2>Debugger</h2>
       <div className="memory-size">
-        <p id="memory-size">Memory size</p>
-        <input
-          type="number"
-          id="memory-size-input"
-          onChange={(event) => setMemorySize(+event.target.value)}
-          onBlur={handleMemorySizeBlur}
-          value={memorySize}
-        />
+        <p id="memory-size">Memory size - 30000</p>
       </div>
       <div className="control-buttons">
         <button
@@ -137,6 +171,7 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
           .slice(memoryViewStart, memoryViewStart + 10)
           .map((cell, index) => (
             <div key={index} className="memory-wrapper">
+              <div className="ascii-symbol">{getAsciiSymbol(cell)}</div>
               <div
                 className={classNames('memory-cell', {
                   highlighted:
