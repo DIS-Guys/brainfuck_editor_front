@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './Editor.css';
+import { RequestBody } from '../../types/RequestBody';
+import { getInterpretedCode } from '../../api/code';
 import { Output } from '../../types/Output';
 
 type Props = {
@@ -7,11 +9,19 @@ type Props = {
   setCode: (code: string) => void;
   input: string;
   setInput: (code: string) => void;
+  interpretedCode: string;
+  setInterpretedCode: (code: string) => void;
 };
 
-export const Editor: React.FC<Props> = ({ code, setCode, input, setInput }) => {
+export const Editor: React.FC<Props> = ({
+  code,
+  setCode,
+  input,
+  setInput,
+  interpretedCode,
+  setInterpretedCode,
+}) => {
   const [lineNumber, setLineNumber] = useState(1);
-  const [interpretedCode, setInterpretedCode] = useState('');
   const mainRef = useRef<HTMLTextAreaElement>(null);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
 
@@ -50,20 +60,14 @@ export const Editor: React.FC<Props> = ({ code, setCode, input, setInput }) => {
   };
 
   const handleRun = () => {
-    const body = {
+    const body: RequestBody = {
       code,
       input,
     };
 
-    fetch('http://localhost:8080/brainfuck/interpret', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((data: Output) => setInterpretedCode(data.output));
+    getInterpretedCode(body).then((data: Output) =>
+      setInterpretedCode(data.output)
+    );
   };
 
   return (

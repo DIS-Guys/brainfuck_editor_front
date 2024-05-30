@@ -3,10 +3,14 @@ import './Debugger.css';
 import { DebugInfo } from '../../types/DebugInfo';
 import classNames from 'classnames';
 import { Ascii } from '../../types/Ascii';
+import { getDebugInfo, getInterpretedCode } from '../../api/code';
+import { RequestBody } from '../../types/RequestBody';
+import { Output } from '../../types/Output';
 
 type Props = {
   code: string;
   input: string;
+  setInterpretedCode: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const asciiNames: Ascii = {
@@ -45,8 +49,14 @@ const asciiNames: Ascii = {
   127: 'DEL',
 };
 
-export const Debugger: React.FC<Props> = ({ code, input }) => {
+export const Debugger: React.FC<Props> = ({
+  code,
+  input,
+  setInterpretedCode,
+}) => {
   const [debuggerCode, setDebuggerCode] = useState('');
+  const [runIndex, setRunIndex] = useState(0);
+  const [runResult, setRunResult] = useState('');
   const [isDebugging, setIsDebugging] = useState(false);
   const [debugInfo, setDebugInfo] = useState<number[][]>([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -67,6 +77,14 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
       .join('');
   };
 
+  const isDot = (code: string, position: number) => {
+    if (code[position] === '.') {
+      const newRunIndex = runIndex + 1;
+      setInterpretedCode((prevCode) => prevCode + runResult[runIndex]);
+      setRunIndex(newRunIndex);
+    }
+  };
+
   const stepThroughCode = () => {
     if (!isDebugging || currentIndex >= debugInfo.length - 1) {
       return;
@@ -74,6 +92,7 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
     const newIndex = currentIndex + 1;
     const newDebugInfo = debugInfo[newIndex];
     setDebuggerCode(highlightCode(code, newDebugInfo[0]));
+    isDot(code, debugInfo[currentIndex][0]);
     setCurrentIndex(newIndex);
     setMemory((prevMemory) => {
       const newMemory = [...prevMemory];
@@ -88,34 +107,32 @@ export const Debugger: React.FC<Props> = ({ code, input }) => {
   };
 
   const handleStartDebugging = () => {
-    const body = {
+    const body: RequestBody = {
       code,
       input,
     };
 
     setIsDebugging(true);
+    setRunIndex(0);
+    setInterpretedCode('');
     setCurrentIndex(0);
     setMemory(Array(30000).fill(0));
     setMemoryViewStart(0);
-    fetch('http://localhost:8080/brainfuck/debug', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((data: DebugInfo) => {
-        if (data.debugInfo.length === 1) {
-          setIsDebugging(false);
-        } else {
-          setDebugInfo(data.debugInfo);
-          setDebuggerCode(highlightCode(code, 0));
-        }
-      });
+    getInterpretedCode(body).then((data: Output) => {
+      setRunResult(data.output);
+    });
+    getDebugInfo(body).then((data: DebugInfo) => {
+      if (data.debugInfo.length === 1) {
+        setIsDebugging(false);
+      } else {
+        setDebugInfo(data.debugInfo);
+        setDebuggerCode(highlightCode(code, 0));
+      }
+    });
   };
 
   const handleStopDebugging = () => {
+    setInterpretedCode('');
     setCurrentIndex(-1);
     setMemory(Array(30000).fill(0));
     setMemoryViewStart(0);
