@@ -1,7 +1,11 @@
 .debugger {
   width: 50%;
-  background-color: #252526;
-  padding: 10px;
+  background-color: #2e2e2e;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  color: #f0f0f0;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 #debugger-container {
@@ -9,27 +13,66 @@
   height: 100%;
 }
 
+h2 {
+  margin: 0;
+  color: #e06c75;
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.memory-size p {
+  font-size: 16px;
+  color: #e06c75;
+  background-color: #4b4b4b;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
 .control-buttons {
   display: flex;
-  height: 50px;
-  gap: 20px;
+  justify-content: space-around;
+  margin-bottom: 20px;
 }
 
 .control-button {
-  width: 80px;
+  background-color: #4b4b4b;
+  color: #e06c75;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  height: 40px;
+  width: 100px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.control-button:hover {
+  background-color: #5c5c5c;
 }
 
 .code-container {
-  font-size: 24px;
+  background-color: #2e2e2e;
+  border: 1px solid #5c5c5c;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 20px;
   white-space: pre-wrap;
   word-wrap: break-word;
   word-break: break-all;
+  margin-bottom: 20px;
+  color: #e06c75;
 }
 
 .memory-container {
-  margin-top: 20px;
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .memory-wrapper {
@@ -41,19 +84,24 @@
 .memory-cell {
   width: 60px;
   height: 60px;
-  border: 1px solid #b93d3d;
+  border: 1px solid #e06c75;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 2px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.memory-cell.highlighted {
+  background-color: rgba(224, 108, 117, 0.2);
+  transform: scale(1.1);
 }
 
 .memory-index {
   margin-top: 5px;
-}
-
-.memory-cell.highlighted {
-  background-color: rgba(255, 0, 0, 0.425);
+  font-size: 12px;
+  color: #b0b0b0;
 }
 
 .ascii-symbol {
@@ -61,4 +109,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 14px;
+  color: #e06c75;
 }

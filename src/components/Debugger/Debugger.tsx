@@ -49,6 +49,17 @@ const asciiNames: Ascii = {
   127: 'DEL',
 };
 
+function getCompressedCode(code: string) {
+  return code
+    .split('')
+    .filter((char) => {
+      if (char !== ' ' && char !== '\n') {
+        return true;
+      }
+    })
+    .join('');
+}
+
 export const Debugger: React.FC<Props> = ({
   code,
   input,
@@ -64,6 +75,8 @@ export const Debugger: React.FC<Props> = ({
   const [memoryViewStart, setMemoryViewStart] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
+  const compressedCode = getCompressedCode(code);
+
   useEffect(() => {
     if (isRunning && currentIndex < debugInfo.length - 1) {
       const timer = setTimeout(() => {
@@ -73,13 +86,11 @@ export const Debugger: React.FC<Props> = ({
     } else {
       setIsRunning(false);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex, isRunning]);
 
   const highlightCode = (code: string, position: number) => {
     return code
-      .split('\n')
-      .join('')
       .split('')
       .map((char, index) => {
         if (index === position) {
@@ -104,8 +115,8 @@ export const Debugger: React.FC<Props> = ({
     }
     const newIndex = currentIndex + 1;
     const newDebugInfo = debugInfo[newIndex];
-    setDebuggerCode(highlightCode(code, newDebugInfo[0]));
-    isDot(code, debugInfo[currentIndex][0]);
+    setDebuggerCode(highlightCode(compressedCode, newDebugInfo[0]));
+    isDot(compressedCode, debugInfo[currentIndex][0]);
     setCurrentIndex(newIndex);
     setMemory((prevMemory) => {
       const newMemory = [...prevMemory];
@@ -139,7 +150,7 @@ export const Debugger: React.FC<Props> = ({
         setIsDebugging(false);
       } else {
         setDebugInfo(data.debugInfo);
-        setDebuggerCode(highlightCode(code, 0));
+        setDebuggerCode(highlightCode(compressedCode, 0));
       }
     });
   };
