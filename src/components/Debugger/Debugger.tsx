@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Debugger.css';
 import { DebugInfo } from '../../types/DebugInfo';
 import classNames from 'classnames';
@@ -62,6 +62,19 @@ export const Debugger: React.FC<Props> = ({
   const [currentIndex, setCurrentIndex] = useState(-1);
   const [memory, setMemory] = useState<number[]>(Array(30000).fill(0));
   const [memoryViewStart, setMemoryViewStart] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    if (isRunning && currentIndex < debugInfo.length - 1) {
+      const timer = setTimeout(() => {
+        stepThroughCode();
+      }, 0);
+      return () => clearTimeout(timer);
+    } else {
+      setIsRunning(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex, isRunning]);
 
   const highlightCode = (code: string, position: number) => {
     return code
@@ -131,12 +144,17 @@ export const Debugger: React.FC<Props> = ({
     });
   };
 
+  const handleRun = () => {
+    setIsRunning(true);
+  };
+
   const handleStopDebugging = () => {
     setInterpretedCode('');
     setCurrentIndex(-1);
     setMemory(Array(30000).fill(0));
     setMemoryViewStart(0);
     setIsDebugging(false);
+    setIsRunning(false);
   };
 
   const getAsciiSymbol = (value: number) => {
@@ -170,7 +188,7 @@ export const Debugger: React.FC<Props> = ({
         >
           Stop
         </button>
-        <button className="control-button" id="run">
+        <button className="control-button" id="run" onClick={handleRun}>
           Run
         </button>
         <button className="control-button" id="step" onClick={stepThroughCode}>
