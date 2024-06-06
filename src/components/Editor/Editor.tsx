@@ -88,6 +88,7 @@ export const Editor: React.FC<Props> = ({
         <textarea
           className="input"
           id="code-input"
+          data-testid="code-input"
           placeholder="Write your code here..."
           ref={mainRef}
           onChange={handleCodeInputChange}
@@ -105,6 +106,7 @@ export const Editor: React.FC<Props> = ({
           id="clear-button"
           onClick={clearEditor}
           title="Clear"
+          data-testid="clear-editor-button"
         ></button>
       </div>
       <div className="editor-blocks">
@@ -114,25 +116,28 @@ export const Editor: React.FC<Props> = ({
             id="input"
             placeholder="Input a value..."
             onChange={handleInputChange}
+            data-testid="input"
             value={input}
           ></textarea>
           <button
             className="button"
             id="clear-input-button"
             title="Clear"
+            data-testid="clear-input-button"
             onClick={() => setInput('')}
           ></button>
         </div>
         <div className="output-container">
           {interpretedCode ? (
-            <div id="output">{interpretedCode}</div>
+            <div id="output" data-testid="output">{interpretedCode}</div>
           ) : (
-            <div id="output">Result will be here...</div>
+            <div id="output" data-testid="output">Result will be here...</div>
           )}
           <button
             className="button"
             id="clear-output-button"
             title="Clear"
+            data-testid="clear-output-button"
             onClick={() => setInterpretedCode('')}
           ></button>
         </div>
